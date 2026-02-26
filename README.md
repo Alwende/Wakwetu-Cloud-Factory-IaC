@@ -32,3 +32,53 @@ ip-10-0-4-138.ec2.internal   Ready    <none>   3m55s   v1.35.0-eks-70ce843
 ```
 
 **LEAD ARCHITECT:** Dan Alwende, PMP
+
+## ARCHITECTURAL DESIGN (HLD)
+The following diagram represents the automated Wakwetu Landing Zone.
+
+```mermaid
+graph TD
+    subgraph "AWS Cloud (us-east-1)"
+        subgraph "Management Plane (IaC Foundation)"
+            S3[(S3: Terraform State)]
+            DB[(DynamoDB: State Lock)]
+        end
+
+        subgraph "Network Plane (Liquid VPC)"
+            VPC[VPC: 10.0.0.0/16]
+            IGW[Internet Gateway]
+            NAT[NAT Gateway]
+            
+            subgraph "Public Subnets (AZ-A/B)"
+                Pub1[Public Subnet 1]
+                Pub2[Public Subnet 2]
+            end
+            
+            subgraph "Private Subnets (AZ-A/B)"
+                Priv1[Private Subnet 1]
+                Priv2[Private Subnet 2]
+            end
+        end
+
+        subgraph "Compute Plane (EKS Factory)"
+            EKS[EKS Control Plane]
+            Node1[Worker Node 1]
+            Node2[Worker Node 2]
+        end
+
+        subgraph "Security Guardrails"
+            IAM[IAM Roles: Cluster & Node]
+            SG[Security Groups]
+        end
+    end
+
+    %% Connectivity
+    IGW --> Pub1
+    NAT --> Priv1
+    NAT --> Priv2
+    EKS --- Node1
+    EKS --- Node2
+    Node1 --- Priv1
+    Node2 --- Priv2
+    S3 --- DB
+```
