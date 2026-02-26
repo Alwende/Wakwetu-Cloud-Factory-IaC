@@ -82,3 +82,16 @@ graph TD
     Node2 --- Priv2
     S3 --- DB
 ```
+
+## PROJECT EVIDENCE (THE PROOF)
+### 1. Networking & VPC Topology
+![VPC Topology](assets/screenshots/vpc_topology.png)
+
+### 2. Managed EKS Cluster Status
+![EKS Active](assets/screenshots/eks_active.png)
+
+### 3. Kubernetes Node Readiness
+![Node Verification](assets/screenshots/kubectl_nodes.png)
+
+### 4. Remote State Governance (S3)
+![S3 Backend](assets/screenshots/s3_backend.png)
